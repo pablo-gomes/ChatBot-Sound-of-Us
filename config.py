@@ -139,23 +139,14 @@ Formato obrigatório:
 🎁 Nome do presente
 💰 Faixa de preço
 📝 descrição curta
-🔗 link de busca
 
 Exemplo:
 
 🎁 Headset gamer RGB
 💰 R$120 - R$180
 📝 ótimo para quem ama jogos online
-🔗 https://www.amazon.com.br/s?k=headset+gamer
 
 IMPORTANTE:
-- sempre mostrar links reais pesquisáveis
-- prefira:
-  - Amazon
-  - Mercado Livre
-  - Shopee
-  - Magazine Luiza
-  - Kabum
 - respostas curtas
 - máximo 5 sugestões
 - evitar parágrafos gigantes

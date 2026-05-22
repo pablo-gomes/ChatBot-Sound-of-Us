@@ -97,15 +97,54 @@ def gerar_cantada():
 @app.route("/presente", methods=["POST"])
 def gerar_presente():
 
+    def _parse_renda(valor):
+        """Converte valores como: 'R$ 10', '10', '10,50' em float."""
+        if valor is None:
+            return None
+
+        if isinstance(valor, (int, float)):
+            return float(valor)
+
+        s = str(valor).strip()
+        if not s:
+            return None
+
+        # Remove moeda e espaços
+        s = s.replace("R$", "").replace("r$", "").strip()
+        # Mantém apenas dígitos, vírgula e ponto
+        # (ex.: '1.234,56' vai virar '1234.56' após normalização abaixo)
+        s = s.replace(" ", "")
+
+        # Se tiver vírgula, tratamos como decimal (pt-BR)
+        if "," in s:
+            # Remove separador de milhar em padrão brasileiro: 1.234,56
+            s = s.replace(".", "")
+            s = s.replace(",", ".")
+        return float(s)
+
     data = request.get_json()
 
     renda = data.get("renda")
     gostos = data.get("gostos")
 
-    if not renda or not gostos:
+    if renda is None or gostos is None or gostos == "":
         return jsonify({
             "erro": "Envie renda e gostos"
         }), 400
+
+    try:
+        renda_value = _parse_renda(renda)
+    except Exception:
+        return jsonify({
+            "erro": "Renda inválida"
+        }), 400
+
+    # Regra do projeto: orçamento menor que R$ 20 bloqueia
+    if renda_value < 20:
+        return jsonify({
+            "status": "blocked",
+            "presentes": "Você não pode impressionar uma pessoa com apenas isso"
+        })
 
     prompt = f"""
     Sugira presentes criativos para uma pessoa
