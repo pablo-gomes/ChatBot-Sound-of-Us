@@ -19,7 +19,10 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 app = Flask(__name__)
-CORS(app)
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}}
+)
 
 # =========================================
 # FUNÇÃO GEMINI
@@ -32,11 +35,14 @@ def ask_gemini(prompt):
         contents=prompt,
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_INSTRUCTION,
-            temperature=0.8
+            temperature=2
         )
     )
 
-    return response.text
+    try:
+        return response.text
+    except:
+        return "Erro ao gerar resposta."
 
 # =========================================
 # ROTA PRINCIPAL
